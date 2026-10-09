@@ -3,14 +3,14 @@ public class ArrayStack<T>{
     private int count;
     private T[] arrStack;
 
-    public ArrayStack (T[] ArrStack){
-        count = 0;
+    public ArrayStack (T[] ArrStack, int Count){
+        count = Count;
         arrStack = ArrStack;
     }
 
     /** Takes no arguments and returns an empty stack */
     public static <T> ArrayStack<T> empty_stack() {
-        return new ArrayStack<>(createArray(2));
+        return new ArrayStack<>(createArray(2), 0);
     }
 
     /** Accepts an Object T and pushes it onto the stack */
@@ -34,7 +34,8 @@ public class ArrayStack<T>{
             throw new IndexOutOfBoundsException("No elements to pop; push some first before popping!");
         } else {
             T obj = arrStack[count-1];
-            arrStack[count--] = null;
+            arrStack[count-1] = null;
+            count--;
             return obj;
         }
     }
