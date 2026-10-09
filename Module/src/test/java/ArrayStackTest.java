@@ -25,12 +25,26 @@ class ArrayStackTest {
     }
 
     @Test
+    void peek(){
+        ArrayStack<Integer> ex = ArrayStack.empty_stack();
+        ex.push(2);
+        ex.push(15);
+        assertEquals(15, ex.peek());
+    }
+
+    @Test
+    void isEmpty(){
+        ArrayStack<String> ex = ArrayStack.empty_stack();
+        ex.push("3");
+        ex.push("abc");
+        assertEquals(false, ex.isEmpty());
+    }
+
+    @Test
     void size(){
         ArrayStack<String> ex = ArrayStack.empty_stack();
         ex.push("3");
         ex.push("abc");
         assertEquals(2, ex.size());
     }
-
-
 }

@@ -39,13 +39,17 @@ public class ArrayStack<T>{
         }
     }
 
-    /** */
+    /** Takes no arguments and returns (without removing) the item on the “top” of the stack */
     public T peek(){
         if (count == 0){
             throw new IndexOutOfBoundsException("No elements to peek at; push some first before peeking!");
         } else {
             return arrStack[count-1];
         }
+    }
+
+    public boolean isEmpty(){
+        return count==0;
     }
 
     /** Takes no arguments and returns the number of items in the stack */
@@ -58,5 +62,4 @@ public class ArrayStack<T>{
     private static <T> T[] createArray(int capacity) {
         return (T[]) new Object[capacity];
     }
-
 }
