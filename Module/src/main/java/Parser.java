@@ -47,4 +47,24 @@ public class Parser {
 
         return expression;
     }
+
+    /** Takes an infix expression and converts it to an RPN expression via the Shunting-yard algorithm */
+    public static AST parseInfix(String str){
+        ArrayStack<AST> output = ArrayStack.empty_stack();
+        ArrayStack<String> operators = ArrayStack.empty_stack();
+        String[] expression = getExpression(str);
+
+        for (int x = 0; x < expression.length; x++) {
+            if (expression[x].matches("\\d+")){
+
+            } else if (expression[x].equals("+") || expression[x].equals("-") || expression[x].equals("*") || expression[x].equals("/") || expression[x].equals("^")) {
+
+            } else if (expression[x].equals("(")){
+
+            } else if (expression[x].equals(")")){
+
+            }
+        }
+        return output.peek();
+    }
 }
