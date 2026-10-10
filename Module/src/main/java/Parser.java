@@ -29,18 +29,19 @@ public class Parser {
         if (intCount - opCount > 1){
             throw new IllegalArgumentException("Too many operands");
         }
-
-        for (int x=0; x<strStack.size(); x++){
+        int strLen = strStack.size();
+        for (int x=0; x<strLen; x++){
+            if (strStack.isEmpty()){
+                break;
+            } else
             if (strStack.peek().matches("\\d+")){
-                rpn.push(new NumNode(Double.parseDouble(strStack.pop())));
+                Double thing = Double.parseDouble(strStack.pop());
+                rpn.push(new NumNode(thing));
             } else
             if (strStack.peek().equals("+") || strStack.peek().equals("-") || strStack.peek().equals("/") || strStack.peek().equals("^")|| strStack.peek().equals("*")){
                 String op = strStack.pop();
-                IO.println(op);
                 String next1 = strStack.pop();
-                IO.println(next1);
                 String next2 = strStack.pop();
-                IO.println(next2);
                 if (next1.matches("\\d+") && next2.matches("\\d+")){
                     rpn.push(new BinopNode(op,new NumNode(Double.parseDouble(next1)),new NumNode(Double.parseDouble(next2))));
                 } else
