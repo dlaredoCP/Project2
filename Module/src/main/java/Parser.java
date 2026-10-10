@@ -1,62 +1,49 @@
 public class Parser {
 
-    /** Take as input a single string and return an AST of the RPN expression*/
-    public static AST parsePostFix(String str){
-        if (str.isEmpty()){
-            throw new IllegalArgumentException("Empty input");
-        }
+    /** Take as input a single string and return an AST of the RPN expression */
+    public static AST parsePostFix(String str) {
         ArrayStack<AST> rpn = ArrayStack.empty_stack();
-        ArrayStack<String> strStack = ArrayStack.empty_stack();
-        String[] arr = str.split("\\s+");
-        int opCount = 0;
-        int intCount = 0;
+        String[] expression = getExpression(str);
 
-        for (String s : arr){
-            strStack.push(s);
-            if (s.equals("+") || s.equals("-") || s.equals("/") || s.equals("^")|| s.equals("*")) {
-                opCount++;
-            } else
-            if (s.matches("\\d+")){
-                intCount++;
-            } else {
-                throw new IllegalArgumentException("Invalid token");
+        for (int x = 0; x < expression.length; x++) {
+            if (expression[x].matches("\\d+")) {
+                rpn.push(new NumNode(Double.parseDouble(expression[x])));
+            } else if (expression[x].equals("+") || expression[x].equals("-") || expression[x].equals("*") || expression[x].equals("/") || expression[x].equals("^")) {
+                AST second = rpn.pop();
+                AST first = rpn.pop();
+                rpn.push(new BinopNode(expression[x], first, second));
             }
         }
-
-        if (intCount - opCount < 1){
-            throw new IllegalArgumentException("Insufficient operands");
-        } else
-        if (intCount - opCount > 1){
-            throw new IllegalArgumentException("Too many operands");
-        }
-        int strLen = strStack.size();
-        for (int x=0; x<strLen; x++){
-            if (strStack.isEmpty()){
-                break;
-            } else
-            if (strStack.peek().matches("\\d+")){
-                Double thing = Double.parseDouble(strStack.pop());
-                rpn.push(new NumNode(thing));
-            } else
-            if (strStack.peek().equals("+") || strStack.peek().equals("-") || strStack.peek().equals("/") || strStack.peek().equals("^")|| strStack.peek().equals("*")){
-                String op = strStack.pop();
-                String next1 = strStack.pop();
-                String next2 = strStack.pop();
-                if (next1.matches("\\d+") && next2.matches("\\d+")){
-                    rpn.push(new BinopNode(op,new NumNode(Double.parseDouble(next1)),new NumNode(Double.parseDouble(next2))));
-                } else
-                if (!next1.matches("\\d+") && next2.matches("\\d+")) {
-                    rpn.push(new BinopNode(op,new BinopNode(next1, null, null),new NumNode(Double.parseDouble(next2))));
-                } else
-                if (next1.matches("\\d+") && !next2.matches("\\d+")) {
-                    rpn.push(new BinopNode(op,new BinopNode(next1, null, null),new NumNode(Double.parseDouble(next1))));
-                } else{
-                    rpn.push(new BinopNode(op,new BinopNode(next1, null, null),new BinopNode(next2, null, null)));
-                }
-            }
-        }
-
         return rpn.peek();
     }
 
+    public static String[] getExpression(String str){
+        String[] expression = str.split("\\s+");
+
+        if (expression.length==0){
+            throw new IllegalArgumentException("empty input");
+        }
+
+        int intCount=0;
+        int opCount=0;
+        for (String s : expression){
+            if (s.matches("\\d+")){
+                intCount++;
+            } else
+            if (s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("^")) {
+                opCount++;
+            } else {
+                throw new IllegalArgumentException("invalid token");
+            }
+        }
+
+        if (intCount-opCount<1){
+            throw new IllegalArgumentException("insufficient operands");
+        } else
+        if (intCount-opCount>1){
+            throw new IllegalArgumentException("too many operands");
+        }
+
+        return expression;
+    }
 }
