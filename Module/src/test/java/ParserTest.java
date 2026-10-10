@@ -16,12 +16,18 @@ class ParserTest {
 
     @Test
     void parseInfix(){
-        assertNotEquals(null, Parser.parseInfix("5 + (13 * 12)"));
+        assertNotEquals(null, Parser.parseInfix("( 5 + 13 ) * 12"));
+        assertNotEquals(null, Parser.parseInfix("3 + 4 x 2 /"));
     }
 
     @Test
-    void morePrecedence(){
-        assertEquals(true, Parser.morePrecedence("+","-"));
+    void Precedence(){
+        assertEquals(2, Parser.precedence("/"));
+    }
+
+    @Test
+    void leftAssoc(){
+        assertTrue(Parser.leftAssoc("*"));
     }
 
 
