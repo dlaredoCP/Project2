@@ -17,7 +17,7 @@ class ParserTest {
     @Test
     void parseInfix(){
         assertNotEquals(null, Parser.parseInfix("( 5 + 13 ) * 12"));
-        assertNotEquals(null, Parser.parseInfix("3 + 4 x 2 /"));
+        assertNotEquals(null, Parser.parseInfix("3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3"));
     }
 
     @Test
