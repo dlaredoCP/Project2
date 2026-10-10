@@ -17,12 +17,13 @@ public class Parser {
         return rpn.peek();
     }
 
+    /** Accepts a string and returns a String[] of its tokens*/
     public static String[] getExpression(String str){
-        String[] expression = str.split("\\s+");
-
-        if (expression.length==0){
+        if (str.isBlank()){
             throw new IllegalArgumentException("empty input");
         }
+
+        String[] expression = str.split("\\s+");
 
         int intCount=0;
         int opCount=0;
