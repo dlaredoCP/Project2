@@ -27,6 +27,9 @@ public class Parser {
 
         int intCount=0;
         int opCount=0;
+        int openCount=0;
+        int closeCount=0;
+
         for (String s : expression){
             if (s.matches("\\d+")){
                 intCount++;
@@ -34,20 +37,30 @@ public class Parser {
             if (s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("^")) {
                 opCount++;
             } else
-            if (postFix && (s.equals("(") || s.equals(")"))){
-            } else {
+            if (postFix && s.equals("(")){
+                openCount=1;
+            } else
+            if (postFix && s.equals(")")){
+                closeCount=1;
+            }
+            else {
                 throw new IllegalArgumentException("invalid token");
             }
         }
-
         if (intCount-opCount<1){
             throw new IllegalArgumentException("insufficient operands");
         } else
         if (intCount-opCount>1){
             throw new IllegalArgumentException("too many operands");
         }
-
-        return expression;
+        if (closeCount == 0 && openCount == 1){
+            throw new IllegalArgumentException("mismatched close paren");
+        } else
+        if (closeCount == 1 && openCount == 0){
+            throw new IllegalArgumentException("mismatched open paren");
+        } else {
+            return expression;
+        }
     }
 
     /** Takes an infix expression and converts it to an RPN expression via the Shunting-yard algorithm */
@@ -55,7 +68,6 @@ public class Parser {
         ArrayStack<AST> output = ArrayStack.empty_stack();
         ArrayStack<String> operators = ArrayStack.empty_stack();
         String[] expression = getExpression(str, true);
-
         for (String s : expression) {
             if (s.matches("\\d+")){
                 output.push(new NumNode(Double.parseDouble(s)));
@@ -68,13 +80,11 @@ public class Parser {
             } else if (s.equals("(")){
                 operators.push(s);
             } else if (s.equals(")")){
-                while (!operators.peek().equals("(")){
+                while (!operators.peek().equals("(") && !operators.isEmpty()){
                     output.push(new BinopNode(operators.pop(), output.pop(), output.pop()));
                 }
                 if (operators.peek().equals("(")){
                     operators.pop();
-                } else {
-                    throw new IllegalArgumentException("mismatched close paren");
                 }
             }
         }
@@ -84,6 +94,9 @@ public class Parser {
         return output.peek();
     }
 
+    
+
+    /** Takes an operator and returns its precedence ranking */
     public static int precedence(String str){
         if (str.equals("^")){
             return 3;
@@ -94,18 +107,14 @@ public class Parser {
         if (str.equals("+") || str.equals("-")){
             return 1;
         } else
-        if (str.equals("(")){
             return 0;
-        } else {
-            throw new IllegalArgumentException("invalid token");
         }
-    }
 
+    /** Takes a string and returns true if it's left associative and false otherwise */
     public static boolean leftAssoc(String str){
         return switch (str) {
             case "^" -> false;
-            case "/", "*", "+", "-"-> true;
-            default -> throw new IllegalArgumentException("invalid token");
+            default -> true;
         };
     }
 }
