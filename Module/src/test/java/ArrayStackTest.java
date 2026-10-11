@@ -20,16 +20,21 @@ class ArrayStackTest {
     @Test
     void pop(){
         ArrayStack<Integer> ex = ArrayStack.empty_stack();
+        ArrayStack<Integer> ex2 = ArrayStack.empty_stack();
         ex.push(2);
         assertEquals(2,ex.pop());
+        assertThrows(IndexOutOfBoundsException.class, ()-> ex2.pop());
     }
 
     @Test
     void peek(){
         ArrayStack<Integer> ex = ArrayStack.empty_stack();
+        ArrayStack<Integer> ex2 = ArrayStack.empty_stack();
         ex.push(2);
         ex.push(15);
         assertEquals(15, ex.peek());
+        assertThrows(IndexOutOfBoundsException.class, ()-> ex2.peek());
+
     }
 
     @Test

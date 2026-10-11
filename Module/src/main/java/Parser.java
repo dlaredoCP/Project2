@@ -5,13 +5,13 @@ public class Parser {
         ArrayStack<AST> rpn = ArrayStack.empty_stack();
         String[] expression = getExpression(str, false);
 
-        for (int x = 0; x < expression.length; x++) {
-            if (expression[x].matches("\\d+")) {
-                rpn.push(new NumNode(Double.parseDouble(expression[x])));
-            } else if (expression[x].equals("+") || expression[x].equals("-") || expression[x].equals("*") || expression[x].equals("/") || expression[x].equals("^")) {
+        for (String s : expression) {
+            if (s.matches("\\d+")) {
+                rpn.push(new NumNode(Double.parseDouble(s)));
+            } else if (s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("^")) {
                 AST second = rpn.pop();
                 AST first = rpn.pop();
-                rpn.push(new BinopNode(expression[x], first, second));
+                rpn.push(new BinopNode(s, first, second));
             }
         }
         return rpn.peek();
@@ -94,27 +94,22 @@ public class Parser {
         return output.peek();
     }
 
-    
-
     /** Takes an operator and returns its precedence ranking */
     public static int precedence(String str){
-        if (str.equals("^")){
-            return 3;
-        } else
-        if (str.equals("/") || str.equals("*")){
-            return 2;
-        } else
-        if (str.equals("+") || str.equals("-")){
-            return 1;
-        } else
-            return 0;
+        return switch (str) {
+            case "^" -> 3;
+            case "/", "*" -> 2;
+            case "+", "-" -> 1;
+            default -> 0;
+        };
         }
 
     /** Takes a string and returns true if it's left associative and false otherwise */
     public static boolean leftAssoc(String str){
-        return switch (str) {
-            case "^" -> false;
-            default -> true;
-        };
+        if (str.equals("^")){
+            return false;
+        } else {
+            return true;
+        }
     }
 }

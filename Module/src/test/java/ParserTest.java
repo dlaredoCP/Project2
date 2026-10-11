@@ -18,6 +18,7 @@ class ParserTest {
     void parseInfix(){
         assertNotEquals(null, Parser.parseInfix("( 5 + 13 ) * 12"));
         assertNotEquals(null, Parser.parseInfix("3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3"));
+        assertNotEquals(null, Parser.parseInfix("( 3 ^ 4 ) * ( 1 - 4 )"));
         assertThrows(IllegalArgumentException.class, ()-> Parser.parseInfix("( a 5 + 13 ) * 12"));
         assertThrows(IllegalArgumentException.class, ()-> Parser.parseInfix("5 + 13 * ( 12"));
         assertThrows(IllegalArgumentException.class, ()-> Parser.parseInfix("5 + 13 ) * 12"));
